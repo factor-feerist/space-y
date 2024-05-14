@@ -22,6 +22,8 @@ app.get("/", (_, res) => {
   res.send(":)");
 });
 
+app.use(express.static('spa/build'));
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
