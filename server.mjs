@@ -24,11 +24,21 @@ app.get("/", (_, res) => {
 
 app.use(express.static('spa/build'));
 
-app.get(/.*/, (_, res) => {
+app.all('*', (_, res) => {
   console.log("hey");
   res.sendFile(path.join(rootDir, "/spa/build/index.html"));
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+//app.listen();
+
+https
+  .createServer(
+    {
+      key: fs.readFileSync(path.join(rootDir, "certs/server.key")),
+      cert: fs.readFileSync(path.join(rootDir, "certs/server.cert")),
+    },
+    app
+  )
+  .listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
