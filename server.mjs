@@ -13,6 +13,7 @@ const app = express();
 let username = null;
 
 app.use(express.static('spa/build'));
+app.use(cookieParser());
 
 app.use(express.json())
 
@@ -28,25 +29,25 @@ app.get("/", (_, res) => {
   res.send(":)");
 });
 
-app.get('/api/getUser', (_, res) => {
-  res.json({username: username});
+app.get('/api/getUser', (req, res) => {
+  res.json({username: req.cookies.username});
 });
 
 app.post('/api/loginUser', (req, res) => {
   username = req.body.username;
+  res.cookie('username', username);
   res.json({username: username});
 });
 
-app.delete('/api/logoutUser', (req, _) => {
-  username = null;
+app.delete('/api/logoutUser', (req, res) => {
+  res.clearCookie('username');
+  res.end();
 });
 
 app.all('*', (_, res) => {
   console.log("hey");
   res.sendFile(path.join(rootDir, "/spa/build/index.html"));
 });
-
-//app.listen();
 
 https
   .createServer(

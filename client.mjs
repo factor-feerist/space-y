@@ -34,7 +34,9 @@ export class Client {
    * @return {void}
    * */
   async logoutUser() {
-    await fetch('/api/logoutUser');
+    await fetch('/api/logoutUser', {
+      method: "DELETE"
+    });
   }
 
   /**
