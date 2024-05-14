@@ -24,6 +24,11 @@ app.get("/", (_, res) => {
 
 app.use(express.static('spa/build'));
 
+app.get(/.*/, (_, res) => {
+  console.log("hey");
+  res.sendFile(path.join(rootDir, "/spa/build/index.html"));
+});
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
