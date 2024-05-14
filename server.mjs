@@ -10,6 +10,12 @@ const rootDir = process.cwd();
 const port = 3000;
 const app = express();
 
+let username = null;
+
+app.use(express.static('spa/build'));
+
+app.use(express.json())
+
 app.get("/client.mjs", (_, res) => {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
   res.sendFile(path.join(rootDir, "client.mjs"), {
@@ -22,7 +28,18 @@ app.get("/", (_, res) => {
   res.send(":)");
 });
 
-app.use(express.static('spa/build'));
+app.get('/api/getUser', (_, res) => {
+  res.json({username: username});
+});
+
+app.post('/api/loginUser', (req, res) => {
+  username = req.body.username;
+  res.json({username: username});
+});
+
+app.delete('/api/logoutUser', (req, _) => {
+  username = null;
+});
 
 app.all('*', (_, res) => {
   console.log("hey");
