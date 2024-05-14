@@ -35,7 +35,7 @@ app.get('/api/getUser', (req, res) => {
 
 app.post('/api/loginUser', (req, res) => {
   username = req.body.username;
-  res.cookie('username', username);
+  res.cookie('username', username, {httpOnly: true, secure: true, sameSite: 'Strict'});
   res.json({username: username});
 });
 
