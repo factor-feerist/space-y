@@ -18,13 +18,14 @@ export class Client {
    * @return {Promise<string | null>} username
    * */
   async loginUser(username) {
-    username = (await (await fetch("/api/loginUser", {
+    const response = await fetch("/api/loginUser", {
       method: "POST",
       body: JSON.stringify({username: username}),
       headers: {
         "content-type": "application/json"
       }
-      })).json())['username'];
+      });
+    username = (await response.json())['username'];
     return username;
   }
 

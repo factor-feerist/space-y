@@ -10,12 +10,16 @@ const rootDir = process.cwd();
 const port = 3000;
 const app = express();
 
-let username = null;
+const cookieChecker = function (req, res, next) {
+  if (req.cookie?.username === null && !(req.path === '/login' && req.path.startsWith('/static') && req.path.startsWith('/api')))
+    res.redirect('/login');
+  next();
+};
 
 app.use(express.static('spa/build'));
 app.use(cookieParser());
-
 app.use(express.json())
+app.use(cookieChecker)
 
 app.get("/client.mjs", (_, res) => {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
@@ -34,7 +38,7 @@ app.get('/api/getUser', (req, res) => {
 });
 
 app.post('/api/loginUser', (req, res) => {
-  username = req.body.username;
+  const username = req.body.username;
   res.cookie('username', username, {httpOnly: true, secure: true, sameSite: 'Strict'});
   res.json({username: username});
 });
