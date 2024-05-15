@@ -12,11 +12,12 @@ const app = express();
 
 const cookieChecker = function (req, res, next) {
   if (req.cookie?.username == null 
-      && !(req.path.startsWith('/login') || req.path.startsWith('/static') || req.path.startsWith('/api'))){
+      && !(req.path.startsWith('/login') || req.path.startsWith('/static') || req.path.startsWith('/api'))) {
     res.redirect('/login');
   }
-  else
+  else {
     next();
+  } 
 };
 
 app.use(express.static('spa/build'));
