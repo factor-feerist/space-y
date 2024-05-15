@@ -11,15 +11,18 @@ const port = 3000;
 const app = express();
 
 const cookieChecker = function (req, res, next) {
-  if (req.cookie?.username === null && !(req.path === '/login' && req.path.startsWith('/static') && req.path.startsWith('/api')))
+  if (req.cookie?.username == null 
+      && !(req.path.startsWith('/login') || req.path.startsWith('/static') || req.path.startsWith('/api'))){
     res.redirect('/login');
-  next();
+  }
+  else
+    next();
 };
 
 app.use(express.static('spa/build'));
 app.use(cookieParser());
 app.use(express.json())
-app.use(cookieChecker)
+app.use(/.*index.html$/, cookieChecker)
 
 app.get("/client.mjs", (_, res) => {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
@@ -29,7 +32,7 @@ app.get("/client.mjs", (_, res) => {
   });
 });
 
-app.get("/", (_, res) => {
+app.get('/', (_, res) => {
   res.send(":)");
 });
 
